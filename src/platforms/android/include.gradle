@@ -1,5 +1,9 @@
 dependencies {
-	implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.22'
+    /*
+    implementation("com.squareup.okhttp3:okhttp:3.8.1")
+    implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.22'
+    implementation group: 'org.slf4j', name: 'slf4j-android', version: '1.7.22'
 	implementation group: 'com.launchdarkly', name: 'okhttp-eventsource', version: '1.8.0'
+	*/
 }
 
