@@ -1,7 +1,7 @@
 import { BaseSSE } from './sse.common';
 import { fromObject, Observable } from 'tns-core-modules/data/observable';
 
-declare var android: any, com: any, java: any, WeakRef;
+declare var com: any, java: any, WeakRef, okhttp3: any;
 
 export class SSE extends BaseSSE {
     private _sseHandler: any;
@@ -15,7 +15,7 @@ export class SSE extends BaseSSE {
         this._url = new java.net.URI(url);
         this.events = fromObject({});
         const that = new WeakRef(this);
-        const handler = com.tylerjroach.eventsource.EventSourceHandler.extend({
+          const DarklyHandler = com.launchdarkly.eventsource.EventHandler.extend({
             owner: that.get(),
             onConnect() {
                 this.owner.events.notify({
@@ -31,14 +31,13 @@ export class SSE extends BaseSSE {
                     object: fromObject({
                         event: event.toString(),
                         message: {
-                            data: message.data,
-                            lastEventId: message.lastEventId,
-                            origin: message.origin
+                            data: message.getData(),
+                            lastEventId: message.getLastEventId(),
+                            origin: message.getOrigin()
                         }
                     })
                 });
             },
-
             onComment(comment) {
                 this.owner.events.notify({
                     eventName: 'onComment',
@@ -47,38 +46,53 @@ export class SSE extends BaseSSE {
                     })
                 });
             },
-
             onError(e) {
                 this.owner.events.notify({
                     eventName: 'onError',
                     object: fromObject({
-                        error: e.getMessage()
+                        error: e
                     })
                 });
             },
-            onClosed(willReconnect) {
+            onClosed() {
                 this.owner.events.notify({
-                    eventName: 'willReconnect',
+                    eventName: 'onClosed',
                     object: fromObject({
-                        willReconnect: willReconnect
+                        onClosed: true
                     })
                 });
             }
         });
-        this._sseHandler = new handler();
-        this._headers = new java.util.HashMap();
-        const arr = Object.keys(headers);
-        if (arr.length > 0) {
-            arr.forEach(key => {
-                this._headers.put(key, headers[key]);
-            });
-        }
+        const DarklyConnectionErrorHandler = com.launchdarkly.eventsource.ConnectionErrorHandler.extend({
+            owner: that.get(),
+            onConnectionError(throwable) {
+                this.owner.events.notify({
+                    eventName: 'onConnectionError',
+                    object: fromObject({
+                        data: throwable
+                    })
+                });
+                return null;
+            }
+        });
 
-        this._es = new com.tylerjroach.eventsource.EventSource.Builder(url)
-            .eventHandler(this._sseHandler)
-            .headers(this._headers)
-            .build();
-        this._es.connect();
+        this._sseHandler = new DarklyHandler();
+        let headerBuilder = new okhttp3.Headers.Builder();
+        for (let property in headers) {
+            if (headers.hasOwnProperty(property)) {
+                headerBuilder.add(property, headers[property]);
+            }
+        }
+        this._headers = headerBuilder.build();
+        try {
+            this._es = new com.launchdarkly.eventsource.EventSource.Builder(this._sseHandler, this._url)
+                .headers(this._headers)
+                .reconnectTimeMs(200)
+                .connectionErrorHandler(new DarklyConnectionErrorHandler())
+                .build();
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     public addEventListener(event: string): void {
@@ -89,11 +103,12 @@ export class SSE extends BaseSSE {
 
     public connect(): void {
         if (!this._es) return;
-        this._es.connect();
+        this._es.start();
     }
 
     public close(): void {
         if (!this._es) return;
         this._es.close();
     }
+
 }
