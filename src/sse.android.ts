@@ -17,7 +17,7 @@ export class SSE extends BaseSSE {
         const that = new WeakRef(this);
           const DarklyHandler = com.launchdarkly.eventsource.EventHandler.extend({
             owner: that.get(),
-            onConnect() {
+            onOpen() {
                 this.owner.events.notify({
                     eventName: 'onConnect',
                     object: fromObject({
@@ -100,7 +100,9 @@ export class SSE extends BaseSSE {
 
     public removeEventListener(event: string): void {
     }
-
+    public getState () {
+        return this._es.getState().toString();
+    }
     public connect(): void {
         if (!this._es) return;
         this._es.start();
