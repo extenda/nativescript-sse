@@ -1,7 +1,7 @@
 {
-  "name": "nativescript-sse",
-  "version": "4.0.2",
-  "description": "A NativeScript client for the Server Sent Events (SSE)",
+  "name": "@extenda/nativescript-okhttp-sse",
+  "version": "1.0.0",
+  "description": "A NativeScript client for handling server sent events (SSE)",
   "main": "sse",
   "typings": "index.d.ts",
   "nativescript": {
@@ -10,18 +10,22 @@
       "ios": "4.0.1"
     }
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/extenda/nativescript-sse/"
+  },
   "scripts": {
     "tsc": "tsc -skipLibCheck",
     "build": "npm i && tsc",
     "test.android": "npm i && npm run tsc && npm run tslint && cd ../demo && tns build android && tns test android --justlaunch",
     "test.ios": "npm i && npm run tsc && npm run tslint && cd ../demo && tns build ios && tns test ios --justlaunch",
     "tslint": "cd .. && tslint \"**/*.ts\" --config tslint.json --exclude \"**/+(node_modules|typings)/**\"",
-    "plugin.link": "npm link && cd ../demo && npm link nativescript-sse && cd ../src",
+    "plugin.link": "npm link && cd ../demo && npm link @extenda/nativescript-okhttp-sse && cd ../src",
     "plugin.tscwatch": "npm run tsc -- -w",
     "demo.ios": "npm i && npm run tsc && cd ../demo && tns run ios --syncAllFiles",
     "demo.android": "npm i && npm run tsc && cd ../demo && tns run android --syncAllFiles",
     "demo.reset": "cd ../demo && rimraf platforms",
-    "plugin.prepare": "npm run tsc && cd ../demo && tns plugin remove nativescript-sse && tns plugin add ../src",
+    "plugin.prepare": "npm run build && cd ../demo && tns plugin remove @extenda/nativescript-okhttp-sse  && tns plugin add ../src",
     "clean": "cd ../demo && rimraf hooks node_modules platforms && cd ../src && rimraf node_modules && npm run plugin.link",
     "ci.tslint": "npm i && tslint '**/*.ts' --config '../tslint.json' --exclude '**/+(node_modules|typings)/**'",
     "prepare": "node scripts/prepare.js"
@@ -37,11 +41,8 @@
     "eventsource"
   ],
   "author": {
-    "name": "Osei Fortune",
-    "email": "fortune.osei@yahoo.com"
-  },
-  "bugs": {
-    "url": "https://github.com/triniwiz/nativescript-sse/issues"
+    "name": "Extenda",
+    "email": "tomas.oberg@extendaretail.com"
   },
   "license": "Apache-2.0",
   "homepage": "https://github.com/triniwiz/nativescript-sse",
