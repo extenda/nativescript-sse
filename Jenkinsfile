@@ -36,7 +36,7 @@ buildProject {
     stage('build') {
       dir('src') {
         // We build this to make sure the demos build properly.
-        sh 'npm run plugin.prepare-vue'
+        sh 'npm run plugin.prepare'
       }
     }
     // Here, we consider the build a success.
@@ -55,7 +55,7 @@ buildProject {
           git add package.json
           git commit -m "[pipeline committer] prepare release $releaseVersion"
           git tag -a -m "Release $releaseVersion" v$releaseVersion
-          npm run plugin.prepare-vue
+          npm run plugin.prepare
           """
         }
 
