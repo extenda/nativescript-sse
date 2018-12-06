@@ -9,7 +9,6 @@ export class SSE extends BaseSSE {
     private _headers: any;
     private _url: any;
     protected events: Observable;
-
     constructor(url: string, headers: any = {}, settings: any = {}) {
         super(url, headers);
         this._url = new java.net.URI(url);
@@ -75,7 +74,6 @@ export class SSE extends BaseSSE {
                 return null;
             }
         });
-
         this._sseHandler = new DarklyHandler();
         let headerBuilder = new okhttp3.Headers.Builder();
         for (let property in headers) {
@@ -88,10 +86,10 @@ export class SSE extends BaseSSE {
             const eventSourceBuilder = new com.launchdarkly.eventsource.EventSource.Builder(this._sseHandler, this._url)
                 .headers(this._headers)
                 .connectionErrorHandler(new DarklyConnectionErrorHandler());
-            if(settings.hasOwnProperty("reconnectTimeMs")) {
-                eventSourceBuilder.reconnectTimeMs(settings['reconnectTimeMs'])
+            if (settings.hasOwnProperty("reconnectTimeMs")) {
+                eventSourceBuilder.reconnectTimeMs(settings['reconnectTimeMs']);
             }
-            if(settings.hasOwnProperty('readTimeoutMs')) {
+            if (settings.hasOwnProperty('readTimeoutMs')) {
                 eventSourceBuilder.readTimeoutMs(settings['readTimeoutMs']);
             }
             this._es = eventSourceBuilder.build();
@@ -99,10 +97,8 @@ export class SSE extends BaseSSE {
             console.log(error);
         }
     }
-
     public addEventListener(event: string): void {
     }
-
     public removeEventListener(event: string): void {
     }
     public getState () {
@@ -112,12 +108,10 @@ export class SSE extends BaseSSE {
         if (!this._es) return;
         this._es.start();
     }
-
     public close(): void {
         if (!this._es) return;
         this._es.close();
     }
-
     public setLastEventId(id): void {
         this._es.setLastEventId(id);
     }
