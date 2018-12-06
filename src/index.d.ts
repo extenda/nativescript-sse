@@ -4,4 +4,5 @@ export declare class SSE extends BaseSSE {
   public removeEventListener(event: string): void;
   public connect(): void;
   public close(): void;
+  public setLastEventId(id): void;
 }
