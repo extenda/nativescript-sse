@@ -10,7 +10,7 @@ export class SSE extends BaseSSE {
     private _url: any;
     protected events: Observable;
 
-    constructor(url: string, headers: any = {}) {
+    constructor(url: string, headers: any = {}, settings: any = {}) {
         super(url, headers);
         this._url = new java.net.URI(url);
         this.events = fromObject({});
@@ -85,11 +85,16 @@ export class SSE extends BaseSSE {
         }
         this._headers = headerBuilder.build();
         try {
-            this._es = new com.launchdarkly.eventsource.EventSource.Builder(this._sseHandler, this._url)
+            const eventSourceBuilder = new com.launchdarkly.eventsource.EventSource.Builder(this._sseHandler, this._url)
                 .headers(this._headers)
-                .reconnectTimeMs(200)
-                .connectionErrorHandler(new DarklyConnectionErrorHandler())
-                .build();
+                .connectionErrorHandler(new DarklyConnectionErrorHandler());
+            if(settings.hasOwnProperty("reconnectTimeMs")) {
+                eventSourceBuilder.reconnectTimeMs(settings['reconnectTimeMs'])
+            }
+            if(settings.hasOwnProperty('readTimeoutMs')) {
+                eventSourceBuilder.readTimeoutMs(settings['readTimeoutMs']);
+            }
+            this._es = eventSourceBuilder.build();
         } catch (error) {
             console.log(error);
         }
@@ -113,4 +118,7 @@ export class SSE extends BaseSSE {
         this._es.close();
     }
 
+    public setLastEventId(id): void {
+        this._es.setLastEventId(id);
+    }
 }

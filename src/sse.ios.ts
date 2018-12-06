@@ -6,7 +6,7 @@ export class SSE extends BaseSSE {
   private _url: any;
   private _es: any;
   protected events: Observable;
-  constructor(url: string, headers: any = {}) {
+  constructor(url: string, headers: any = {}, settings: any = {}) {
     super(url, headers);
     this.events = fromObject({});
     this._url = url;
@@ -65,5 +65,8 @@ export class SSE extends BaseSSE {
   public close(): void {
     if (!this._es) return;
     this._es.close();
+  }
+  public setLastEventId(id): void {
+      console.log("setLastEventId not implemented for iOS");
   }
 }
