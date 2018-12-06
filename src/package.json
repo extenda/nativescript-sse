@@ -25,7 +25,7 @@
     "demo.ios": "npm i && npm run tsc && cd ../demo && tns run ios --syncAllFiles",
     "demo.android": "npm i && npm run tsc && cd ../demo && tns run android --syncAllFiles",
     "demo.reset": "cd ../demo && rimraf platforms",
-    "plugin.prepare": "npm run build && cd ../demo && tns plugin remove @extenda/nativescript-okhttp-sse && npm install ../src --save",
+    "plugin.prepare": "npm run build && cd ../demo && npm install ../src --save",
     "clean": "cd ../demo && rimraf hooks node_modules platforms && cd ../src && rimraf node_modules && npm run plugin.link",
     "ci.tslint": "npm i && tslint '**/*.ts' --config '../tslint.json' --exclude '**/+(node_modules|typings)/**'",
     "prepare": "node scripts/prepare.js"
