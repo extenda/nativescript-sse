@@ -1,12 +1,8 @@
-var Sse = require("nativescript-sse").Sse;
-var sse = new Sse();
+const SSE = require("@extenda/nativescript-okhttp-sse").SSE;
 
-describe("greet function", function() {
+describe("SSE Test suite", function() {
     it("exists", function() {
-        expect(sse.greet).toBeDefined();
-    });
-
-    it("returns a string", function() {
-        expect(sse.greet()).toEqual("Hello, NS");
+        const sse = new SSE("http://localhost:8080/events",{}, {});
+        expect(sse.setLastEventId).toBeDefined();
     });
 });

@@ -1,6 +1,6 @@
 import { Observable } from 'tns-core-modules/data/observable';
 import { ObservableArray } from 'tns-core-modules/data/observable-array';
-import { SSE } from 'nativescript-sse';
+import { SSE } from '@extenda/nativescript-okhttp-sse';
 import { isAndroid } from 'tns-core-modules/platform';
 
 export class HelloWorldModel extends Observable {
