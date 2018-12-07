@@ -1,5 +1,5 @@
 {
-  "name": "tns-template-hello-world-ts",
+  "name": "com.extenda.nativescriptokhttpssedemo",
   "main": "app.js",
   "version": "1.6.0",
   "author": {
@@ -27,6 +27,9 @@
   "homepage": "https://github.com/NativeScript/template-hello-world-ts",
   "android": {
     "v8Flags": "--expose_gc"
+  },
+  "dependencies": {
+    "@extenda/nativescript-okhttp-sse": "../src"
   },
   "devDependencies": {
     "nativescript-dev-typescript": "^0.3.0"
